@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나는 환생한다면 어떤 이세계 캐릭터가 될까?</title>
+    <style>
+        :root {
+            --primary-color: #6a3093;
+            --secondary-color: #a044ff;
+            --background-color: #f3e9fa;
+            --text-color: #333;
+            --card-bg: #fff;
+            --button-hover: #8e44ad;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        
+        .intro, .result-desc {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .start-btn, .next-btn, .prev-btn, .restart-btn, .share-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 10px 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .start-btn:hover, .next-btn:hover, .prev-btn:hover, .restart-btn:hover, .share-btn:hover {
+            background: var(--button-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .question-container {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            border-color: var(--secondary-color);
+            background-color: #f9f2ff;
+        }
+        
+        .option.selected {
+            border-color: var(--primary-color);
+            background-color: #f0e2ff;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .result-container {
+            text-align: center;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .character-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 20px auto;
+            border: 5px solid var(--secondary-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .result-name {
+            font-size: 1.8rem;
+            margin: 15px 0;
+            color: var(--primary-color);
+        }
+        
+        .result-details {
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .detail-section {
+            margin-bottom: 15px;
+        }
+        
+        .detail-title {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .share-container {
+            margin-top: 30px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .question {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 시작 화면 -->
+        <div id="intro-screen">
+            <header>
+                <h1>나는 환생한다면 어떤 이세계 캐릭터가 될까?</h1>
+                <p class="subtitle">15개의 질문으로 알아보는 나의 이세계 캐릭터!</p>
+            </header>
+            
+            <div class="intro">
+                <p>다른 세계, 이세계(異世界)에 환생한다면 당신은 어떤 캐릭터가 될까요?</p>
+                <p>용감한 기사, 신비한 마법사, 그림자 암살자, 아니면 전혀 다른 누군가?</p>
+                <p>15개의 재미있는 질문에 답하고 당신의 이세계 캐릭터를 발견하세요!</p>
+                <button class="start-btn" onclick="startQuiz()">테스트 시작하기</button>
+            </div>
+        </div>
+        
+        <!-- 질문 화면 -->
+        <div id="quiz-screen" class="hidden">
+            <header>
+                <h1>나는 환생한다면 어떤 이세계 캐릭터가 될까?</h1>
+            </header>
+            
+            <div class="progress-bar">
+                <div class="progress" id="progress-bar"></div>
+            </div>
+            
+            <div class="question-container">
+                <div class="question" id="question"></div>
+                <div class="options" id="options"></div>
+            </div>
+            
+            <div class="navigation">
+                <button class="prev-btn" id="prev-btn" onclick="prevQuestion()">이전</button>
+                <button class="next-btn" id="next-btn" onclick="nextQuestion()">다음</button>
+            </div>
+        </div>
+        
+        <!-- 결과 화면 -->
+        <div id="result-screen" class="hidden">
+            <header>
+                <h1>당신의 이세계 캐릭터는...</h1>
+            </header>
+            
+            <div class="result-container">
+                <div class="character-image" id="character-image">
+                    캐릭터 이미지
+                </div>
+                <h2 class="result-name" id="result-name"></h2>
+                
+                <div class="result-details">
+                    <div class="detail-section">
+                        <span class="detail-title">특징: </span>
+                        <span id="result-trait"></span>
+                    </div>
+                    <div class="detail-section">
+                        <span class="detail-title">성향: </span>
+                        <span id="result-personality"></span>
+                    </div>
+                    <div class="detail-section">
+                        <span class="detail-title">능력: </span>
+                        <span id="result-ability"></span>
+                    </div>
+                    <div class="detail-section">
+                        <span class="detail-title">환생 결과: </span>
+                        <span id="result-description"></span>
+                    </div>
+                    <div class="detail-section">
+                        <span class="detail-title">좋은 파티원: </span>
+                        <span id="result-good-party"></span>
+                    </div>
+                    <div class="detail-section">
+                        <span class="detail-title">맞지 않는 상대: </span>
+                        <span id="result-bad-match"></span>
+                    </div>
+                </div>
+                
+                <div class="share-container">
+                    <button class="share-btn" id="share-btn" onclick="shareResult()">결과 공유하기</button>
+                    <button class="share-btn" onclick="copyToClipboard()">결과 복사하기</button>
+                    <button class="restart-btn" onclick="restartQuiz()">다시 테스트하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 공유 API 지원 여부 확인
+        document.addEventListener('DOMContentLoaded', function() {
+            const shareBtn = document.getElementById('share-btn');
+            if (!navigator.share || !window.isSecureContext) {
+                shareBtn.textContent = "SNS에 공유하기";
+                shareBtn.setAttribute("onclick", "copyToClipboard()");
+            }
+        });
+        
+        // 질문 목록
+        const questions = [
+            {
+                question: "드래곤이 마을을 공격한다면, 나는 제일 먼저 칼을 들고 나설 것이다.",
+                options: ["매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다"]
+            },
+            {
+                question: "숲속 길을 걷다가 수상한 물약을 발견했다면, 호기심에 한 모금 마셔볼 것이다.",
+                options: ["매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다"]
+            },
+            {
+                question: "마법학교에 입학한다면, 수업보다 금지된 마법서를 몰래 읽는 데 더 시간을 쓸 것이다.",
+                options: ["매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다"]
+            },
+            {
+                question: "세계를 지배하려는 마왕과 대화로 설득할 수 있다고 생각한다.",
+                options: ["매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다"]
+            },
+            {
+                question: "숨겨진 보물지도를 발견했다면, 위험을 무릅쓰고 혼자서라도 모험을 떠날 것이다.",
+                options: ["매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다"]
+            },
+            {
+                question: "요정들이 개최하는 100년에 한 번 열리는 파티에 초대받는다면, 밤새도록 춤출 자신이 있다.",
+                options: ["매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다"]
+            },
+            {
+                question: "마법의 거울이 '진실'과 '편안한 거짓말' 중 하나를 선택하라고 한다면, 나는 진실을 선택할 것이다.",
+                options: ["매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다"]
+            },
+            {
+                question: "다른 사람을 구하기 위해 내 목숨을 희생할 수 있다.",
+                options: ["매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다"]
+            },
+            {
+                question: "마법사가 되어 하루만 마법을 쓸 수 있다면, 세상을 바꾸는 큰 마법보다 일상을 편하게 하는 작은 마법들을 쓰고 싶다.",
+                options: ["매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다"]
+            },
+            {
+                question: "저주에 걸린 성에서 하룻밤을 보내야 한다면, 무서워도 호기심에 모든 방을 탐험할 것이다.",
+                options: ["매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다"]
+            },
+            {
+                question: "신비한 악기를 연주하면 주변 사람들의 마음을 읽을 수 있다면, 그 능력을 사용할 것이다.",
+                options: ["매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다"]
+            },
+            {
+                question: "내가 갖고 싶은 초능력은 남들을 치유하는 능력이다.",
+                options: ["매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다"]
+            },
+            {
+                question: "어느 날 갑자기 동물과 대화할 수 있는 능력이 생긴다면, 가장 먼저 대화하고 싶은 동물은 가장 지혜로운 동물일 것이다.",
+                options: ["매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다"]
+            },
+            {
+                question: "이세계의 왕국에서 직업을 선택해야 한다면, 화려한 궁정 마법사보다 마을의 약초사가 되고 싶다.",
+                options: ["매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다"]
+            },
+            {
+                question: "전설의 검을 발견했지만 그 검이 사용자의 수명을 조금씩 앗아간다는 저주가 있다면, 그래도 그 검을 사용할 것이다.",
+                options: ["매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다"]
+            }
+        ];
+
+        // 캐릭터 목록
+        const characters = [
+            {
+                name: "영웅적 기사 (Heroic Knight)",
+                trait: "강한 정의감과 용기를 지닌 기사. 언제나 약자를 위해 싸우며 왕국의 평화를 지키는 것이 사명이다.",
+                personality: "충성심이 강하고 규율을 중시하며, 명예를 소중히 여긴다.",
+                ability: "뛰어난 검술 실력과 전략적 사고력, 그리고 위기 상황에서 빛나는 리더십.",
+                description: "당신은 진정한 용기와 희생정신을 가진 영혼입니다. 이세계에서는 누구나 신뢰하는 기사로 환생하여 왕국을 지키는 영웅이 될 것입니다.",
+                goodParty: "천상의 성직자, 전략의 지휘관, 신비의 마법사",
+                badMatch: "그림자 암살자, 망령의 사령술사, 그림자 상인"
+            },
+            {
+                name: "신비한 마법사 (Mysterious Mage)",
+                trait: "지식과 마법의 힘을 추구하는 학자형 마법사. 끊임없이 새로운 마법을 연구한다.",
+                personality: "호기심이 많고 분석적이며, 때로는 현실보다 책과 연구에 몰두한다.",
+                ability: "강력한 원소 마법과 광범위한 지식, 문제 해결 능력이 뛰어나다.",
+                description: "당신의 호기심과 지식에 대한 갈증은 이세계에서 위대한 마법사로 이어질 것입니다. 마법의 비밀을 풀고 세상을 변화시킬 힘을 가지게 될 것입니다.",
+                goodParty: "기계공학의 명인, 운명의 예언자, 광기의 연금술사",
+                badMatch: "불꽃의 용병, 수수께끼의 마술사, 장난꾸러기 음유시인"
+            },
+            {
+                name: "그림자 암살자 (Shadow Assassin)",
+                trait: "어둠 속에서 움직이는 암살자. 완벽한 임무 수행과 비밀 유지를 최우선으로 한다.",
+                personality: "조용하고 관찰력이 뛰어나며, 감정보다는 효율성을 중시한다.",
+                ability: "은밀한 잠입과 정확한 타격, 독과 함정에 대한 전문 지식.",
+                description: "당신의 예리한 직관과 침착함은 이세계에서 그림자 속 암살자로 이어질 것입니다. 보이지 않는 곳에서 중요한 역할을 하게 될 것입니다.",
+                goodParty: "그림자 상인, 망령의 사령술사, 수수께끼의 마술사",
+                badMatch: "영웅적 기사, 천상의 성직자, 불굴의 성전사"
+            },
+            {
+                name: "자연의 수호자 드루이드 (Nature Guardian Druid)",
+                trait: "자연과 교감하며 숲과 생명을 보호하는 드루이드. 평화를 사랑하지만 자연이 위협받으면 강력한 수호자로 변한다.",
+                personality: "평온하고 인내심이 많으며, 모든 생명체를 존중한다.",
+                ability: "자연 마법, 동물과의 교감, 치유 능력이 뛰어나다.",
+                description: "당신은 자연과의 깊은 연결고리를 가진 영혼입니다. 이세계에서는 숲의 정령들과 대화하고 생명의 균형을 지키는 드루이드로 환생할 것입니다.",
+                goodParty: "황야의 레인저, 신비의 조련사, 천상의 댄서",
+                badMatch: "기계공학의 명인, 광기의 연금술사, 불꽃의 용병"
+            },
+            {
+                name: "불꽃의 용병 (Flame Mercenary)",
+                trait: "자유로운 영혼을 가진 방랑 용병. 금전보다는 모험과 도전을 추구한다.",
+                personality: "충동적이고 열정적이며, 규칙에 얽매이는 것을 싫어한다.",
+                ability: "다양한 무기 다루기, 생존 기술, 빠른 적응력이 강점.",
+                description: "당신의 자유로운 영혼과 모험심은 이세계에서 전설적인 용병으로 이어질 것입니다. 어떤 도전이든 두려워하지 않고 맞서게 될 것입니다.",
+                goodParty: "장난꾸러기 음유시인, 차원의 여행자, 춤추는 검사",
+                badMatch: "전략의 지휘관, 신비한 마법사, 불굴의 성전사"
+            },
+            {
+                name: "천상의 성직자 (Celestial Cleric)",
+                trait: "신의 뜻을 따르는 신앙심 깊은 성직자. 치유와 축복으로 사람들을 돕는다.",
+                personality: "이타적이고 온화하며, 신념이 확고하다.",
+                ability: "강력한 치유 마법과 신성 마법, 악령과 언데드를 물리치는 힘.",
+                description: "당신의 타인을 향한 연민과 깊은 영성은 이세계에서 존경받는 성직자로 환생할 것입니다. 많은 이들에게 희망과 치유를 가져다줄 것입니다.",
+                goodParty: "영웅적 기사, 불굴의 성전사, 천상의 댄서",
+                badMatch: "그림자 암살자, 망령의 사령술사, 광기의 연금술사"
+            },
+            {
+                name: "광기의 연금술사 (Mad Alchemist)",
+                trait: "위험한 실험을 두려워하지 않는 혁신적인 연금술사. 세상을 바꿀 발명을 추구한다.",
+                personality: "기발하고 독창적이지만, 때로는 사회적 규범을 무시한다.",
+                ability: "폭발성 물약 제조, 희귀 물질 변환, 예상치 못한 발명품 창조.",
+                description: "당신의 창의력과 관습에 얽매이지 않는 사고방식은 이세계에서 혁명적인 연금술사로 이어질 것입니다. 대단한 발견을 이루지만, 가끔은 폭발사고도 일으킬 것입니다.",
+                goodParty: "신비한 마법사, 기계공학의 명인, 수수께끼의 마술사",
+                badMatch: "천상의 성직자, 자연의 수호자 드루이드, 불굴의 성전사"
+            },
+            {
+                name: "전략의 지휘관 (Strategic Commander)",
+                trait: "뛰어난 전략가이자 군대의 지휘관. 승리를 위해 모든 변수를 계산한다.",
+                personality: "냉철하고 분석적이며, 감정보다 논리를 중시한다.",
+                ability: "전장 분석, 병사 관리, 적의 심리 간파 능력이 탁월.",
+                description: "당신의 분석적 사고와 리더십은 이세계에서 위대한 전략가로 환생하게 할 것입니다. 중요한 전투에서 승리를 이끌어낼 것입니다.",
+                goodParty: "영웅적 기사, 운명의 예언자, 불굴의 성전사",
+                badMatch: "불꽃의 용병, 장난꾸러기 음유시인, 차원의 여행자"
+            },
+            {
+                name: "장난꾸러기 음유시인 (Mischievous Bard)",
+                trait: "노래와 이야기로 사람들을 즐겁게 하는 음유시인. 가는 곳마다 웃음과 소동을 일으킨다.",
+                personality: "유쾌하고 사교적이며, 때로는 너무 장난기가 넘친다.",
+                ability: "마법적인 음악 연주, 사람의 마음을 사로잡는 이야기 능력, 은밀한 정보 수집.",
+                description: "당신의 유머 감각과 사교성은 이세계에서 모두의 마음을 사로잡는 음유시인으로 환생할 것입니다. 어둡고 지루한 곳에 빛과 웃음을 가져올 것입니다.",
+                goodParty: "불꽃의 용병, 춤추는 검사, 천상의 댄서",
+                badMatch: "신비한 마법사, 전략의 지휘관, 망령의 사령술사"
+            },
+            {
+                name: "불굴의 성전사 (Indomitable Paladin)",
+                trait: "신념을 위해 싸우는 빛의 전사. 어둠과 악을 물리치는 것이 사명이다.",
+                personality: "원칙적이고 헌신적이며, 흔들리지 않는 신념을 가지고 있다.",
+                ability: "신성한 힘을 담은 검술, 악의 세력을 감지하는 능력, 동료를 보호하는 오라.",
+                description: "당신의 강한 신념과 정의감은 이세계에서 빛나는 성전사로 환생할 것입니다. 어둠의 세력에 맞서 싸우는 희망의 상징이 될 것입니다.",
+                goodParty: "천상의 성직자, 영웅적 기사, 전략의 지휘관",
+                badMatch: "그림자 암살자, 망령의 사령술사, 광기의 연금술사"
+            },
+            {
+                name: "황야의 레인저 (Wilderness Ranger)",
+                trait: "미지의 땅을 탐험하는 외로운 레인저. 문명과 야생 사이에서 균형을 찾는다.",
+                personality: "독립적이고 자급자족하며, 소수의 깊은 관계를 중시한다.",
+                ability: "야생에서의 생존 기술, 정확한 원거리 사격, 추적 능력이 뛰어나다.",
+                description: "당신의 독립심과 자연을 향한 친밀감은 이세계에서 전설적인 레인저로 이어질 것입니다. 미지의 땅을 탐험하고 숨겨진 위험으로부터 사람들을 보호할 것입니다.",
+                goodParty: "자연의 수호자 드루이드, 신비의 조련사, 차원의 여행자",
+                badMatch: "기계공학의 명인, 그림자 상인, 광기의 연금술사"
+            },
+            {
+                name: "수수께끼의 마술사 (Enigmatic Illusionist)",
+                trait: "환상과 속임수의 달인인 마술사. 진실과 허구의 경계를 흐린다.",
+                personality: "신비롭고 예측할 수 없으며, 자신의 진짜 의도를 잘 감춘다.",
+                ability: "강력한 환영 마법, 마음을 읽는 듯한 통찰력, 교묘한 손재주.",
+                description: "당신의 창의적 사고와 비밀스러운 성격은 이세계에서 사람들을 매혹시키는 마술사로 환생할 것입니다. 누구도 당신의 진짜 모습을 쉽게 알아차리지 못할 것입니다.",
+                goodParty: "그림자 암살자, 광기의 연금술사, 그림자 상인",
+                badMatch: "신비한 마법사, 운명의 예언자, 천상의 성직자"
+            },
+            {
+                name: "기계공학의 명인 (Master Artificer)",
+                trait: "기계장치와 마법을 결합한 발명품을 만드는 공학자. 항상 새로운 기술을 연구한다.",
+                personality: "실용적이고 호기심이 많으며, 문제 해결에 열정적이다.",
+                ability: "복잡한 기계 제작, 마법 에너지 조작, 불가능해 보이는 문제에 대한 창의적 해결책 제시.",
+                description: "당신의 혁신적 사고와 문제 해결 능력은 이세계에서 혁명적인 발명가로 이어질 것입니다. 당신의 발명품은 세상을 놀라게 할 것입니다.",
+                goodParty: "신비한 마법사, 광기의 연금술사, 그림자 상인",
+                badMatch: "자연의 수호자 드루이드, 황야의 레인저, 신비의 조련사"
+            },
+            {
+                name: "신비의 조련사 (Mystic Beast Tamer)",
+                trait: "전설의 생물들과 교감하는 조련사. 다른 이들이 두려워하는 괴물마저 친구로 만든다.",
+                personality: "인내심이 많고 직관적이며, 말보다 행동으로 소통한다.",
+                ability: "야수와의 정신적 유대, 다양한 생물의 언어 이해, 신비한 생물의 치유 능력.",
+                description: "당신의 동물을 향한 교감 능력과 인내심은 이세계에서 전설적인 몬스터 조련사로 이어질 것입니다. 드래곤과 그리폰도 당신의 친구가 될 것입니다.",
+                goodParty: "자연의 수호자 드루이드, 황야의 레인저, 운명의 예언자",
+                badMatch: "망령의 사령술사, 그림자 암살자, 불꽃의 용병"
+            },
+            {
+                name: "그림자 상인 (Shadow Merchant)",
+                trait: "희귀한 물건과 비밀 정보를 거래하는 상인. 그의 가게에는 항상 놀라운 물건이 있다.",
+                personality: "영리하고 계산적이며, 기회를 놓치지 않는다.",
+                ability: "탁월한 협상 기술, 가치 있는 물건을 알아보는 안목, 광범위한 인맥.",
+                description: "당신의 비즈니스 감각과 사람을 읽는 능력은 이세계에서 모든 이들이 찾는 신비한 상인으로 이어질 것입니다. 당신의 가게는 이세계의 숨겨진 보물창고가 될 것입니다.",
+                goodParty: "기계공학의 명인, 그림자 암살자, 수수께끼의 마술사",
+                badMatch: "영웅적 기사, 황야의 레인저, 불굴의 성전사"
+            },
+            {
+                name: "춤추는 검사 (Dancing Bladesmaster)",
+                trait: "무용과 검술을 결합한 우아한 전사. 전투를 예술로 승화시킨다.",
+                personality: "열정적이고 자유분방하며, 아름다움을 추구한다.",
+                ability: "예측할 수 없는 춤추는 검술, 뛰어난 민첩성과 균형감각, 군중을 매료시키는 공연 능력.",
+                description: "당신의 예술적 감각과 신체적 재능은 이세계에서 전설적인 검무 마스터로 이어질 것입니다. 당신의 전투는 가장 아름다운 춤이 될 것입니다.",
+                goodParty: "장난꾸러기 음유시인, 불꽃의 용병, 천상의 댄서",
+                badMatch: "전략의 지휘관, 그림자 암살자, 망령의 사령술사"
+            },
+            {
+                name: "운명의 예언자 (Fate Prophet)",
+                trait: "과거와 미래를 볼 수 있는 신비한 예언자. 운명의 흐름에 깊은 통찰력을 가진다.",
+                personality: "사려 깊고 조용하며, 때때로 현실과 환상의 경계에 산다.",
+                ability: "예지력, 꿈을 통한 통찰, 운명의 실마리를 찾아내는 능력.",
+                description: "당신의 직관력과 깊은 통찰력은 이세계에서 미래를 예견하는 예언자로 이어질 것입니다. 중요한 선택의 순간에 많은 이들에게 지혜를 나눠줄 것입니다.",
+                goodParty: "신비한 마법사, 전략의 지휘관, 신비의 조련사",
+                badMatch: "수수께끼의 마술사, 불꽃의 용병, 차원의 여행자"
+            },
+            {
+                name: "망령의 사령술사 (Spectral Necromancer)",
+                trait: "죽음의 비밀을 연구하는 사령술사. 다른 이들이 두려워하는 영역을 탐구한다.",
+                personality: "내성적이고 철학적이며, 관습적인 도덕관념에 얽매이지 않는다.",
+                ability: "영혼과의 대화, 언데드 소환, 생명과 죽음의 에너지 조작.",
+                description: "당신의 금기에 대한 호기심과 죽음에 대한 깊은 이해는 이세계에서 존경받는 동시에 두려워하는 사령술사로 이어질 것입니다. 죽음조차도 당신에게는 또 다른 시작일 뿐입니다.",
+                goodParty: "그림자 암살자, 차원의 여행자, 수수께끼의 마술사",
+                badMatch: "천상의 성직자, 영웅적 기사, 불굴의 성전사"
+            },
+            {
+                name: "천상의 댄서 (Celestial Dancer)",
+                trait: "신성한 춤으로 축복과 치유를 전하는 댄서. 그들의 춤은 기적을 일으킨다.",
+                personality: "섬세하고 공감능력이 뛰어나며, 아름다움과 조화를 중시한다.",
+                ability: "치유의 춤, 감정을 담은 움직임으로 주변 환경에 영향을 미치는 능력, 신과의 교감.",
+                description: "당신의 섬세한 감성과 표현력은 이세계에서 신들과 교감하는 신성한 댄서로 이어질 것입니다. 당신의 춤은 슬픔을 치유하고 축복을 내릴 것입니다.",
+                goodParty: "자연의 수호자 드루이드, 천상의 성직자, 춤추는 검사",
+                badMatch: "광기의 연금술사, 망령의 사령술사, 그림자 암살자"
+            },
+            {
+                name: "차원의 여행자 (Dimensional Traveler)",
+                trait: "다양한 세계와 차원을 여행하는 신비한 존재. 무한한 가능성의 세계를 탐험한다.",
+                personality: "호기심이 많고 적응력이 뛰어나며, 편견 없이 새로운 것을 받아들인다.",
+                ability: "차원 이동, 다양한 언어와 문화의 이해, 예상치 못한 상황에서의 즉흥적 대처 능력.",
+                description: "당신의 개방적인 마음과 끝없는 호기심은 이세계에서 차원의 경계를 넘나드는 여행자로 이어질 것입니다. 아무도 보지 못한 세계를 탐험하고 놀라운 이야기의 주인공이 될 것입니다.",
+                goodParty: "불꽃의 용병, 황야의 레인저, 망령의 사령술사",
+                badMatch: "전략의 지휘관, 운명의 예언자, 영웅적 기사"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = [];
+
+        // 테스트 시작하기
+        function startQuiz() {
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        // 질문 로드하기
+        function loadQuestion() {
+            const questionEl = document.getElementById('question');
+            const optionsEl = document.getElementById('options');
+            const progressEl = document.getElementById('progress-bar');
+            const prevBtn = document.getElementById('prev-btn');
+            
+            // 진행 상태 업데이트
+            progressEl.style.width = `${(currentQuestion / questions.length) * 100}%`;
+            
+            // 이전 버튼 표시/숨김
+            prevBtn.style.visibility = currentQuestion === 0 ? 'hidden' : 'visible';
+            
+            // 질문 표시
+            questionEl.textContent = questions[currentQuestion].question;
+            
+            // 옵션 표시
+            optionsEl.innerHTML = '';
+            questions[currentQuestion].options.forEach((option, index) => {
+                const optionEl = document.createElement('div');
+                optionEl.classList.add('option');
+                optionEl.textContent = option;
+                optionEl.dataset.value = 5 - index; // 매우 그렇다(5)부터 매우 그렇지 않다(1)까지
+                
+                // 이미 선택된 답변이 있으면 표시
+                if (answers[currentQuestion] !== undefined && parseInt(optionEl.dataset.value) === answers[currentQuestion]) {
+                    optionEl.classList.add('selected');
+                }
+                
+                optionEl.addEventListener('click', selectOption);
+                optionsEl.appendChild(optionEl);
+            });
+        }
+
+        // 옵션 선택하기
+        function selectOption(e) {
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            e.target.classList.add('selected');
+            answers[currentQuestion] = parseInt(e.target.dataset.value);
+            
+            // 옵션 선택 후 자동으로 다음 질문으로 넘어가기
+            setTimeout(() => {
+                nextQuestion();
+            }, 300); // 0.3초 후 다음 질문으로 넘어감 (효과를 보여주기 위한 짧은 지연)
+        }
+
+        // 다음 질문으로
+        function nextQuestion() {
+            // 현재 질문에 대한 답변이 없으면 경고
+            if (answers[currentQuestion] === undefined) {
+                alert('질문에 답해주세요!');
+                return;
+            }
+            
+            // 마지막 질문이면 결과 화면으로
+            if (currentQuestion === questions.length - 1) {
+                showResult();
+                return;
+            }
+            
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        // 이전 질문으로
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        // 캐릭터 이미지 경로 설정
+        const characterImages = {
+            "영웅적 기사 (Heroic Knight)": "images/Heroic_Knight.png",
+            "신비한 마법사 (Mysterious Mage)": "images/Mysterious_Mage.png",
+            "그림자 암살자 (Shadow Assassin)": "images/Shadow_Assassin.png",
+            "자연의 수호자 드루이드 (Nature Guardian Druid)": "images/Nature_Guardian_Druid.png",
+            "불꽃의 용병 (Flame Mercenary)": "images/Flame_Mercenary.png",
+            "천상의 성직자 (Celestial Cleric)": "images/Celestial_Cleric.png",
+            "광기의 연금술사 (Mad Alchemist)": "images/Mad_Alchemist.png",
+            "전략의 지휘관 (Strategic Commander)": "images/Strategic_Commander.png",
+            "장난꾸러기 음유시인 (Mischievous Bard)": "images/barMischievous_Bard.png",
+            "불굴의 성전사 (Indomitable Paladin)": "images/Indomitable_Paladin.png",
+            "황야의 레인저 (Wilderness Ranger)": "images/Wilderness_Ranger.png",
+            "수수께끼의 마술사 (Enigmatic Illusionist)": "images/Enigmatic_Illusionist.png",
+            "기계공학의 명인 (Master Artificer)": "images/Master_Artificer.png",
+            "신비의 조련사 (Mystic Beast Tamer)": "images/Mystic_Beast_Tamer.png",
+            "그림자 상인 (Shadow Merchant)": "images/Shadow_Merchant.png",
+            "춤추는 검사 (Dancing Bladesmaster)": "images/Dancing_Bladesmaster.png",
+            "운명의 예언자 (Fate Prophet)": "images/Fate_Prophet.png",
+            "망령의 사령술사 (Spectral Necromancer)": "images/Spectral_Necromancer.png",
+            "천상의 댄서 (Celestial Dancer)": "images/Celestial_Dancer.png",
+            "차원의 여행자 (Dimensional Traveler)": "images/Dimensional_Traveler.png"
+        };
+        
+        // 결과 보여주기
+        function showResult() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            
+            // 점수 계산 및 캐릭터 결정
+            const character = calculateResult();
+            
+            // 결과 표시
+            document.getElementById('result-name').textContent = character.name;
+            document.getElementById('result-trait').textContent = character.trait;
+            document.getElementById('result-personality').textContent = character.personality;
+            document.getElementById('result-ability').textContent = character.ability;
+            document.getElementById('result-description').textContent = character.description;
+            document.getElementById('result-good-party').textContent = character.goodParty;
+            document.getElementById('result-bad-match').textContent = character.badMatch;
+            
+            // 캐릭터 이미지 표시
+            const characterImage = document.getElementById('character-image');
+            const imagePath = characterImages[character.name];
+            
+            // 이미지가 있으면 표시, 없으면 기본 텍스트 유지
+            if (imagePath) {
+                // div를 img로 교체하거나 내부에 img 추가
+                characterImage.innerHTML = `<img src="${imagePath}" alt="${character.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            }
+        }
+
+        // 점수 계산 및 캐릭터 결정
+        function calculateResult() {
+            // 간단한 알고리즘: 각 질문의 응답 점수를 바탕으로 캐릭터 결정
+            // 실제 구현에서는 더 복잡한 알고리즘을 사용할 수 있음
+            
+            // 예시: 점수 집계 및 캐릭터 매핑
+            const totalScore = answers.reduce((sum, score) => sum + score, 0);
+            
+            // 총점을 기반으로 캐릭터 인덱스 결정 (0~19)
+            const characterIndex = Math.floor((totalScore / (questions.length * 5)) * characters.length);
+            const finalIndex = Math.min(Math.max(0, characterIndex), characters.length - 1);
+            
+            return characters[finalIndex];
+        }
+
+        // 결과 공유하기
+        function shareResult() {
+            const character = calculateResult();
+            const shareText = `🌟 이세계 환생 테스트 결과 🌟\n나는 "${character.name}"입니다!\n\n특징: ${character.trait.substring(0, 50)}...\n좋은 파티원: ${character.goodParty}\n\n당신은 어떤 캐릭터인가요? #이세계환생테스트`;
+            
+            // 웹 공유 API 지원 확인 (HTTPS 환경에서만 작동)
+            if (navigator.share && window.isSecureContext) {
+                try {
+                    navigator.share({
+                        title: '이세계 환생 테스트 결과',
+                        text: shareText,
+                        url: window.location.href
+                    })
+                    .catch((error) => {
+                        console.log('공유 중 오류 발생:', error);
+                        copyToClipboard(); // 공유 실패 시 클립보드에 복사
+                    });
+                } catch (err) {
+                    console.log('공유 시도 중 오류:', err);
+                    copyToClipboard(); // 오류 발생 시 클립보드에 복사
+                }
+            } else {
+                // Web Share API를 지원하지 않는 환경
+                copyToClipboard();
+            }
+        }
+        
+        // 클립보드에 복사하기
+        function copyToClipboard() {
+            const character = calculateResult();
+            const shareText = `🌟 이세계 환생 테스트 결과 🌟\n나는 "${character.name}"입니다!\n\n특징: ${character.trait}\n성향: ${character.personality}\n능력: ${character.ability}\n\n좋은 파티원: ${character.goodParty}\n맞지 않는 상대: ${character.badMatch}\n\n당신은 어떤 캐릭터인가요? #이세계환생테스트`;
+            
+            const dummy = document.createElement('textarea');
+            document.body.appendChild(dummy);
+            dummy.value = shareText;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            alert('결과가 클립보드에 복사되었습니다! SNS에 붙여넣기 해보세요!');
+        }
+
+        // 테스트 다시 시작하기
+        function restartQuiz() {
+            currentQuestion = 0;
+            answers = [];
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('intro-screen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
