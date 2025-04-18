@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>나는 환생한다면 어떤 이세계 캐릭터가 될까?</title>
+    <!-- Google AdSense 코드 -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9048966881724273" crossorigin="anonymous"></script>
     <style>
         :root {
             --primary-color: #6a3093;
@@ -149,8 +151,8 @@
         }
         
         .character-image {
-            width: 200px;
-            height: 200px;
+            width: 300px;
+            height: 300px;
             border-radius: 50%;
             object-fit: cover;
             margin: 20px auto;
@@ -221,6 +223,20 @@
                 <p>용감한 기사, 신비한 마법사, 그림자 암살자, 아니면 전혀 다른 누군가?</p>
                 <p>15개의 재미있는 질문에 답하고 당신의 이세계 캐릭터를 발견하세요!</p>
                 <button class="start-btn" onclick="startQuiz()">테스트 시작하기</button>
+                
+                <!-- 인트로 페이지 광고 -->
+                <div class="ad-container" style="margin-top: 30px; text-align: center;">
+                    <!-- 광고 코드 -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-9048966881724273"
+                         data-ad-slot="3185422151"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
             </div>
         </div>
         
@@ -289,13 +305,52 @@
                     <button class="share-btn" onclick="copyToClipboard()">결과 복사하기</button>
                     <button class="restart-btn" onclick="restartQuiz()">다시 테스트하기</button>
                 </div>
+                
+                <!-- 결과 페이지 광고 -->
+                <div class="ad-container" style="margin-top: 30px; text-align: center;">
+                    <!-- 광고 코드 -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-9048966881724273"
+                         data-ad-slot="3185422151"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 공유 API 지원 여부 확인
+        // 모바일 광고 표시 설정
+        function showMobileAdsIfNeeded() {
+            // 모바일 디바이스 확인
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const adContainers = document.querySelectorAll('.ad-container');
+            
+            adContainers.forEach(container => {
+                if (isMobile) {
+                    // 모바일 광고 설정 (원래 코드 유지)
+                    // 이미 적용된 코드가 모바일에도 반응형으로 적용됨
+                } else {
+                    // 데스크탑에서는 광고 크기 조정
+                    const adElement = container.querySelector('.adsbygoogle');
+                    if (adElement) {
+                        adElement.style.display = 'inline-block';
+                        adElement.style.width = '728px';
+                        adElement.style.height = '90px';
+                    }
+                }
+            });
+        }
+        
+        // 페이지 로드 시 광고 설정 적용
         document.addEventListener('DOMContentLoaded', function() {
+            showMobileAdsIfNeeded();
+            
+            // 공유 API 지원 여부 확인
             const shareBtn = document.getElementById('share-btn');
             if (!navigator.share || !window.isSecureContext) {
                 shareBtn.textContent = "SNS에 공유하기";
@@ -639,26 +694,26 @@
 
         // 캐릭터 이미지 경로 설정
         const characterImages = {
-            "영웅적 기사 (Heroic Knight)": "images/Heroic_Knight.png",
-            "신비한 마법사 (Mysterious Mage)": "images/Mysterious_Mage.png",
-            "그림자 암살자 (Shadow Assassin)": "images/Shadow_Assassin.png",
-            "자연의 수호자 드루이드 (Nature Guardian Druid)": "images/Nature_Guardian_Druid.png",
-            "불꽃의 용병 (Flame Mercenary)": "images/Flame_Mercenary.png",
-            "천상의 성직자 (Celestial Cleric)": "images/Celestial_Cleric.png",
-            "광기의 연금술사 (Mad Alchemist)": "images/Mad_Alchemist.png",
-            "전략의 지휘관 (Strategic Commander)": "images/Strategic_Commander.png",
-            "장난꾸러기 음유시인 (Mischievous Bard)": "images/barMischievous_Bard.png",
-            "불굴의 성전사 (Indomitable Paladin)": "images/Indomitable_Paladin.png",
-            "황야의 레인저 (Wilderness Ranger)": "images/Wilderness_Ranger.png",
-            "수수께끼의 마술사 (Enigmatic Illusionist)": "images/Enigmatic_Illusionist.png",
-            "기계공학의 명인 (Master Artificer)": "images/Master_Artificer.png",
-            "신비의 조련사 (Mystic Beast Tamer)": "images/Mystic_Beast_Tamer.png",
-            "그림자 상인 (Shadow Merchant)": "images/Shadow_Merchant.png",
-            "춤추는 검사 (Dancing Bladesmaster)": "images/Dancing_Bladesmaster.png",
-            "운명의 예언자 (Fate Prophet)": "images/Fate_Prophet.png",
-            "망령의 사령술사 (Spectral Necromancer)": "images/Spectral_Necromancer.png",
-            "천상의 댄서 (Celestial Dancer)": "images/Celestial_Dancer.png",
-            "차원의 여행자 (Dimensional Traveler)": "images/Dimensional_Traveler.png"
+            "영웅적 기사 (Heroic Knight)": "images/knight.jpg",
+            "신비한 마법사 (Mysterious Mage)": "images/mage.jpg",
+            "그림자 암살자 (Shadow Assassin)": "images/assassin.jpg",
+            "자연의 수호자 드루이드 (Nature Guardian Druid)": "images/druid.jpg",
+            "불꽃의 용병 (Flame Mercenary)": "images/mercenary.jpg",
+            "천상의 성직자 (Celestial Cleric)": "images/cleric.jpg",
+            "광기의 연금술사 (Mad Alchemist)": "images/alchemist.jpg",
+            "전략의 지휘관 (Strategic Commander)": "images/commander.jpg",
+            "장난꾸러기 음유시인 (Mischievous Bard)": "images/bard.jpg",
+            "불굴의 성전사 (Indomitable Paladin)": "images/paladin.jpg",
+            "황야의 레인저 (Wilderness Ranger)": "images/ranger.jpg",
+            "수수께끼의 마술사 (Enigmatic Illusionist)": "images/illusionist.jpg",
+            "기계공학의 명인 (Master Artificer)": "images/artificer.jpg",
+            "신비의 조련사 (Mystic Beast Tamer)": "images/beasttamer.jpg",
+            "그림자 상인 (Shadow Merchant)": "images/merchant.jpg",
+            "춤추는 검사 (Dancing Bladesmaster)": "images/dancer.jpg",
+            "운명의 예언자 (Fate Prophet)": "images/prophet.jpg",
+            "망령의 사령술사 (Spectral Necromancer)": "images/necromancer.jpg",
+            "천상의 댄서 (Celestial Dancer)": "images/celestialdancer.jpg",
+            "차원의 여행자 (Dimensional Traveler)": "images/traveler.jpg"
         };
         
         // 결과 보여주기
