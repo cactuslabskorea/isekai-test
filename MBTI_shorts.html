@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>간소화된 MBTI 테스트</title>
+    <style>
+        body {
+            font-family: 'Nanum Gothic', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .intro {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        .question p {
+            font-weight: bold;
+            margin-top: 0;
+        }
+        .options {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .options label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 4px;
+            background-color: #eee;
+            transition: background-color 0.3s;
+            width: 45%;
+        }
+        .options label:hover {
+            background-color: #ddd;
+        }
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+        .progress-bar {
+            height: 20px;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress {
+            height: 100%;
+            background-color: #3498db;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            display: block;
+            margin: 20px auto;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #result h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .result-type {
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            color: #3498db;
+            margin: 20px 0;
+        }
+        .trait {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .trait span {
+            font-weight: bold;
+            color: #3498db;
+        }
+        .restart {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .restart button {
+            background-color: #95a5a6;
+        }
+        .restart button:hover {
+            background-color: #7f8c8d;
+        }
+        @media (max-width: 600px) {
+            .options {
+                flex-direction: column;
+            }
+            .options label {
+                width: auto;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>간소화된 MBTI 테스트</h1>
+    
+    <div class="intro">
+        <h2>테스트 소개</h2>
+        <p>이 테스트는 MBTI의 기본 개념을 바탕으로 만든 간소화된 버전입니다. 총 15개의 문항으로 구성되어 있으며, 약 5분 정도 소요됩니다.</p>
+        <p>각 질문에 대해 자신에게 더 가까운 항목을 선택해주세요. 정답은 없으니 편안하게 응답해주세요.</p>
+    </div>
+    
+    <div class="test-container" id="test">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        
+        <div id="questions"></div>
+        
+        <button id="next-btn">다음</button>
+    </div>
+    
+    <div id="result">
+        <h2>테스트 결과</h2>
+        <div class="result-type" id="mbti-result"></div>
+        <div id="result-description"></div>
+        <div class="restart">
+            <button id="restart-btn">다시 테스트하기</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "1. 모임에서 일반적으로 나는:",
+                options: [
+                    { text: "새로운 사람들과 대화하는 것을 즐긴다", type: "E" },
+                    { text: "이미 알고 있는 소수의 사람들과 대화하는 것을 선호한다", type: "I" }
+                ]
+            },
+            {
+                question: "2. 나는 주로:",
+                options: [
+                    { text: "말하기 전에 생각을 정리한다", type: "I" },
+                    { text: "말하면서 생각을 정리한다", type: "E" }
+                ]
+            },
+            {
+                question: "3. 나는 일반적으로:",
+                options: [
+                    { text: "현실적이고 구체적인 것을 선호한다", type: "S" },
+                    { text: "이론적이고 추상적인 것을 선호한다", type: "N" }
+                ]
+            },
+            {
+                question: "4. 나는 일을 계획할 때:",
+                options: [
+                    { text: "세부 사항에 집중한다", type: "S" },
+                    { text: "전체적인 그림을 먼저 생각한다", type: "N" }
+                ]
+            },
+            {
+                question: "5. 나는 새로운 아이디어를 생각할 때:",
+                options: [
+                    { text: "현실적인 활용 가능성을 중요시한다", type: "S" },
+                    { text: "창의적인 가능성을 중요시한다", type: "N" }
+                ]
+            },
+            {
+                question: "6. 나는 결정을 내릴 때:",
+                options: [
+                    { text: "논리적으로 분석하여 결정한다", type: "T" },
+                    { text: "사람들의 감정을 고려하여 결정한다", type: "F" }
+                ]
+            },
+            {
+                question: "7. 나는 갈등 상황에서:",
+                options: [
+                    { text: "객관적인 사실에 집중한다", type: "T" },
+                    { text: "다른 사람의 감정을 먼저 생각한다", type: "F" }
+                ]
+            },
+            {
+                question: "8. 나는 비판을 할 때:",
+                options: [
+                    { text: "솔직하고 직접적으로 이야기한다", type: "T" },
+                    { text: "상대방의 기분을 고려하여 말한다", type: "F" }
+                ]
+            },
+            {
+                question: "9. 나는 일반적으로:",
+                options: [
+                    { text: "계획에 따라 진행하는 것을 선호한다", type: "J" },
+                    { text: "상황에 따라 유연하게 대처하는 것을 선호한다", type: "P" }
+                ]
+            },
+            {
+                question: "10. 나는 약속 시간에:",
+                options: [
+                    { text: "항상 정시에 도착하거나 일찍 도착한다", type: "J" },
+                    { text: "종종 약간 늦는 편이다", type: "P" }
+                ]
+            },
+            {
+                question: "11. 나는 여행을 갈 때:",
+                options: [
+                    { text: "계획을 세우고 일정을 따른다", type: "J" },
+                    { text: "즉흥적으로 결정하며 유연하게 움직인다", type: "P" }
+                ]
+            },
+            {
+                question: "12. 휴식 시간에 나는:",
+                options: [
+                    { text: "다른 사람들과 함께 시간을 보내고 싶다", type: "E" },
+                    { text: "혼자서 조용히 시간을 보내고 싶다", type: "I" }
+                ]
+            },
+            {
+                question: "13. 나는 책을 읽을 때:",
+                options: [
+                    { text: "사실적인 내용과 구체적인 정보를 선호한다", type: "S" },
+                    { text: "상상력이 풍부한 이야기나 추상적인 개념을 선호한다", type: "N" }
+                ]
+            },
+            {
+                question: "14. 나는 누군가 도움이 필요할 때:",
+                options: [
+                    { text: "문제 해결을 위한 실질적인 조언을 제공한다", type: "T" },
+                    { text: "공감하고 정서적인 지원을 제공한다", type: "F" }
+                ]
+            },
+            {
+                question: "15. 나는 일을 마무리할 때:",
+                options: [
+                    { text: "마감 시간보다 일찍 끝내는 편이다", type: "J" },
+                    { text: "마감 시간에 임박해서 끝내는 편이다", type: "P" }
+                ]
+            }
+        ];
+
+        const mbtiDescriptions = {
+            "ISTJ": {
+                title: "세심한 관리자",
+                description: "책임감이 강하고 실용적이며 사실에 근거하여 논리적으로 판단합니다. 체계적이고 조직적인 성향을 가지고 있으며, 규칙과 전통을 중요시합니다."
+            },
+            "ISFJ": {
+                title: "헌신적인 보호자",
+                description: "책임감이 강하고 온화하며 타인을 배려하는 성향이 있습니다. 세부적인 것에 주의를 기울이며 안정성을 추구합니다."
+            },
+            "INFJ": {
+                title: "통찰력 있는 옹호자",
+                description: "이상주의적이며 원칙을 중요시하는 성향이 있습니다. 다른 사람의 감정에 민감하게 반응하며 깊은 통찰력을 가지고 있습니다."
+            },
+            "INTJ": {
+                title: "전략적인 사상가",
+                description: "독립적이고 분석적인 사고를 하며, 체계적으로 미래를 계획합니다. 지식을 추구하고 높은 기준을 가지고 있습니다."
+            },
+            "ISTP": {
+                title: "능숙한 탐험가",
+                description: "논리적이고 실용적이며 문제 해결 능력이 뛰어납니다. 위기 상황에서 침착하게 대처하며 자율성을 중요시합니다."
+            },
+            "ISFP": {
+                title: "예술적인 창작자",
+                description: "따뜻하고 감성적이며 예술적 감각이 뛰어납니다. 현재에 충실하며 자신만의 가치관을 중요시합니다."
+            },
+            "INFP": {
+                title: "이상적인 중재자",
+                description: "이상주의적이고 창의적이며 다른 사람의 가능성을 발견하는 능력이 있습니다. 깊은 가치관을 가지고 있으며 조화를 추구합니다."
+            },
+            "INTP": {
+                title: "논리적인 사색가",
+                description: "분석적이고 호기심이 많으며 새로운 이론을 탐색하는 것을 즐깁니다. 논리적인 문제 해결에 능숙하며 독립적인 사고를 합니다."
+            },
+            "ESTP": {
+                title: "활동적인 해결사",
+                description: "에너지가 넘치고 행동 지향적이며 문제 해결 능력이 뛰어납니다. 현실적이며 자발적인 성향을 가지고 있습니다."
+            },
+            "ESFP": {
+                title: "사교적인 연예인",
+                description: "친절하고 열정적이며 사람들과 어울리는 것을 좋아합니다. 현재를 즐기며 실용적인 접근 방식을 선호합니다."
+            },
+            "ENFP": {
+                title: "열정적인 혁신가",
+                description: "창의적이고 열정적이며 가능성을 발견하는 능력이 있습니다. 새로운 아이디어를 탐색하고 사람들과의 연결을 중요시합니다."
+            },
+            "ENTP": {
+                title: "대담한 발명가",
+                description: "창의적이고 지적이며 논쟁을 즐깁니다. 새로운 아이디어를 발전시키는 것을 좋아하며 규칙에 도전하는 성향이 있습니다."
+            },
+            "ESTJ": {
+                title: "효율적인 관리자",
+                description: "체계적이고 실용적이며 결과 지향적입니다. 전통적인 가치를 중요시하며 목표 달성을 위해 효율적으로 일합니다."
+            },
+            "ESFJ": {
+                title: "사교적인 외교관",
+                description: "친절하고 협조적이며 다른 사람의 필요에 민감하게 반응합니다. 조화와 협력을 추구하며 전통적인 가치를 중요시합니다."
+            },
+            "ENFJ": {
+                title: "정열적인 지도자",
+                description: "카리스마가 있고 이상주의적이며 다른 사람의 잠재력을 끌어내는 능력이 있습니다. 사람들을 연결하고 영감을 주는 것을 좋아합니다."
+            },
+            "ENTJ": {
+                title: "대담한 지휘관",
+                description: "결단력이 있고 논리적이며 리더십이 뛰어납니다. 효율성과 결과를 중요시하며 장기적인 계획을 세우는 것을 좋아합니다."
+            }
+        };
+
+        let currentQuestion = 0;
+        const results = {
+            E: 0, I: 0,
+            S: 0, N: 0,
+            T: 0, F: 0,
+            J: 0, P: 0
+        };
+
+        const questionsContainer = document.getElementById('questions');
+        const nextButton = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress');
+        const testContainer = document.getElementById('test');
+        const resultContainer = document.getElementById('result');
+        const mbtiResult = document.getElementById('mbti-result');
+        const resultDescription = document.getElementById('result-description');
+        const restartButton = document.getElementById('restart-btn');
+
+        function showQuestion(index) {
+            questionsContainer.innerHTML = '';
+            
+            if (index < questions.length) {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                
+                const questionText = document.createElement('p');
+                questionText.textContent = questions[index].question;
+                questionDiv.appendChild(questionText);
+                
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+                
+                questions[index].options.forEach((option, i) => {
+                    const label = document.createElement('label');
+                    
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = 'question';
+                    radio.value = option.type;
+                    radio.id = `option-${i}`;
+                    
+                    const optionText = document.createTextNode(option.text);
+                    
+                    label.appendChild(radio);
+                    label.appendChild(optionText);
+                    optionsDiv.appendChild(label);
+                });
+                
+                questionDiv.appendChild(optionsDiv);
+                questionsContainer.appendChild(questionDiv);
+                
+                // Update progress bar
+                progressBar.style.width = `${(index / questions.length) * 100}%`;
+            }
+        }
+
+        function handleNextClick() {
+            const selectedOption = document.querySelector('input[name="question"]:checked');
+            
+            if (!selectedOption && currentQuestion < questions.length) {
+                alert('항목을 선택해주세요.');
+                return;
+            }
+            
+            if (currentQuestion < questions.length) {
+                const type = selectedOption.value;
+                results[type]++;
+                
+                currentQuestion++;
+                
+                if (currentQuestion < questions.length) {
+                    showQuestion(currentQuestion);
+                } else {
+                    showResult();
+                }
+            }
+        }
+
+        function showResult() {
+            const mbtiType = 
+                (results.E > results.I ? 'E' : 'I') +
+                (results.S > results.N ? 'S' : 'N') +
+                (results.T > results.F ? 'T' : 'F') +
+                (results.J > results.P ? 'J' : 'P');
+            
+            testContainer.style.display = 'none';
+            resultContainer.style.display = 'block';
+            
+            mbtiResult.textContent = mbtiType;
+            
+            const typeInfo = mbtiDescriptions[mbtiType];
+            
+            let descriptionHTML = `<h3>${typeInfo.title}</h3>`;
+            descriptionHTML += `<p>${typeInfo.description}</p>`;
+            
+            descriptionHTML += `<div class="trait"><span>E/I:</span> ${results.E > results.I ? '외향형(E)' : '내향형(I)'} - ${results.E > results.I ? '사람들과 교류하며 에너지를 얻는 편입니다.' : '혼자만의 시간을 통해 에너지를 충전하는 편입니다.'}</div>`;
+            
+            descriptionHTML += `<div class="trait"><span>S/N:</span> ${results.S > results.N ? '감각형(S)' : '직관형(N)'} - ${results.S > results.N ? '구체적인 사실과 현실적인 정보에 집중하는 편입니다.' : '패턴을 찾고 가능성을 탐색하는 것을 선호하는 편입니다.'}</div>`;
+            
+            descriptionHTML += `<div class="trait"><span>T/F:</span> ${results.T > results.F ? '사고형(T)' : '감정형(F)'} - ${results.T > results.F ? '논리적이고 객관적인 판단을 중요시하는 편입니다.' : '가치와 사람들의 감정을 고려하여 결정하는 편입니다.'}</div>`;
+            
+            descriptionHTML += `<div class="trait"><span>J/P:</span> ${results.J > results.P ? '판단형(J)' : '인식형(P)'} - ${results.J > results.P ? '계획을 세우고 체계적으로 일하는 것을 선호하는 편입니다.' : '유연하게 상황에 적응하며 일하는 것을 선호하는 편입니다.'}</div>`;
+            
+            resultDescription.innerHTML = descriptionHTML;
+        }
+
+        function restartTest() {
+            currentQuestion = 0;
+            
+            Object.keys(results).forEach(key => {
+                results[key] = 0;
+            });
+            
+            testContainer.style.display = 'block';
+            resultContainer.style.display = 'none';
+            
+            showQuestion(currentQuestion);
+        }
+
+        nextButton.addEventListener('click', handleNextClick);
+        restartButton.addEventListener('click', restartTest);
+
+        // Initialize the test
+        showQuestion(currentQuestion);
+    </script>
+</body>
+</html>
