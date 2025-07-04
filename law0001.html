@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>외환거래법 신고대상 자가점검 체크리스트</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .question-group {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 12px;
+            border: 1px solid #e1e7ff;
+        }
+
+        .question {
+            font-weight: 500;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f7faff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea10, #764ba210);
+        }
+
+        .option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #667eea;
+        }
+
+        .option label {
+            flex: 1;
+            cursor: pointer;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .alert {
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            font-weight: 500;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .alert.warning {
+            background: linear-gradient(135deg, #fed7d7, #feb2b2);
+            border: 1px solid #fc8181;
+            color: #742a2a;
+        }
+
+        .alert.success {
+            background: linear-gradient(135deg, #c6f6d5, #9ae6b4);
+            border: 1px solid #68d391;
+            color: #2f855a;
+        }
+
+        .alert.info {
+            background: linear-gradient(135deg, #bee3f8, #90cdf4);
+            border: 1px solid #63b3ed;
+            color: #2a69ac;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-section {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .result-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .result-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .check-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .check-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #e6fffa, #b2f5ea);
+            border: 1px solid #4fd1c7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-box h3 {
+            color: #234e52;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #2d3748;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 외환거래법 신고대상 자가점검</h1>
+            <p>본인의 외환거래가 신고대상인지 간편하게 확인해보세요</p>
+        </div>
+
+        <div class="content">
+            <div class="info-box">
+                <h3>📋 체크리스트 안내</h3>
+                <p>아래 질문들에 답변하시면 외환거래법상 신고 의무가 있는지 확인할 수 있습니다. 정확한 법률 상담은 전문가나 관련 기관에 문의하시기 바랍니다.</p>
+            </div>
+
+            <!-- 거주자 구분 -->
+            <div class="section">
+                <div class="section-title">
+                    <div class="section-icon">1</div>
+                    거주자 구분
+                </div>
+                <div class="question-group">
+                    <div class="question">귀하의 거주자 신분은 무엇입니까?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="residency" id="resident" value="resident">
+                            <label for="resident">거주자 (한국에 거주하는 한국인 또는 외국인)</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="residency" id="non-resident" value="non-resident">
+                            <label for="non-resident">비거주자 (해외에 거주하는 한국인 또는 외국인)</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 해외송금 -->
+            <div class="section">
+                <div class="section-title">
+                    <div class="section-icon">2</div>
+                    해외송금
+                </div>
+                <div class="question-group">
+                    <div class="question">연간 해외송금 금액이 얼마입니까?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="remittance" id="remit-under-50k" value="under-50k">
+                            <label for="remit-under-50k">연간 US$ 5만 이하</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="remittance" id="remit-over-50k" value="over-50k">
+                            <label for="remit-over-50k">연간 US$ 5만 초과</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="remittance" id="remit-none" value="none">
+                            <label for="remit-none">해외송금을 하지 않음</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 외화차입 -->
+            <div class="section">
+                <div class="section-title">
+                    <div class="section-icon">3</div>
+                    외화차입
+                </div>
+                <div class="question-group">
+                    <div class="question">외화자금을 차입하거나 차입할 계획이 있습니까?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="borrowing" id="borrow-individual" value="individual">
+                            <label for="borrow-individual">개인 또는 비영리법인으로 외화차입</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="borrowing" id="borrow-under-30m" value="under-30m">
+                            <label for="borrow-under-30m">영리법인으로 연간 US$ 3천만 이하 차입</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="borrowing" id="borrow-over-30m" value="over-30m">
+                            <label for="borrow-over-30m">영리법인으로 연간 US$ 3천만 초과 차입</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="borrowing" id="borrow-none" value="none">
+                            <label for="borrow-none">외화차입을 하지 않음</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 수출입 -->
+            <div class="section">
+                <div class="section-title">
+                    <div class="section-icon">4</div>
+                    수출입 거래
+                </div>
+                <div class="question-group">
+                    <div class="question">수출입 거래에서 특별한 지급조건이 있습니까?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="trade" id="trade-advance" value="advance-payment">
+                            <label for="trade-advance">계약 건당 US$ 10만 초과, 물품 선적 전 1년 초과 수령/지급</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="trade" id="trade-normal" value="normal">
+                            <label for="trade-normal">일반적인 수출입 거래 (위 조건에 해당하지 않음)</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="trade" id="trade-none" value="none">
+                            <label for="trade-none">수출입 거래를 하지 않음</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 외화예금 -->
+            <div class="section">
+                <div class="section-title">
+                    <div class="section-icon">5</div>
+                    외화예금
+                </div>
+                <div class="question-group">
+                    <div class="question">해외 또는 국내에서 외화예금을 하시나요?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="deposit" id="deposit-over-50k" value="over-50k">
+                            <label for="deposit-over-50k">건당 US$ 5만 초과 외화예금</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="deposit" id="deposit-under-50k" value="under-50k">
+                            <label for="deposit-under-50k">건당 US$ 5만 이하 외화예금</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="deposit" id="deposit-none" value="none">
+                            <label for="deposit-none">외화예금을 하지 않음</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 현금 휴대반출 -->
+            <div class="section">
+                <div class="section-title">
+                    <div class="section-icon">6</div>
+                    현금 휴대반출
+                </div>
+                <div class="question-group">
+                    <div class="question">출국시 외화 현금을 휴대하시나요?</div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="cash" id="cash-over-10k" value="over-10k">
+                            <label for="cash-over-10k">US$ 1만 초과 현금 휴대</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="cash" id="cash-under-10k" value="under-10k">
+                            <label for="cash-under-10k">US$ 1만 이하 현금 휴대</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="cash" id="cash-none" value="none">
+                            <label for="cash-none">외화 현금을 휴대하지 않음</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="check-button" onclick="checkReporting()">📋 신고 의무 확인하기</button>
+
+            <div class="result-section" id="result">
+                <div class="result-title" id="resultTitle"></div>
+                <div class="result-text" id="resultText"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 옵션 선택 시 스타일 변경
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                // 같은 그룹의 다른 옵션들에서 selected 클래스 제거
+                document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
+                    r.closest('.option').classList.remove('selected');
+                });
+                // 선택된 옵션에 selected 클래스 추가
+                this.closest('.option').classList.add('selected');
+            });
+        });
+
+        function checkReporting() {
+            const residency = document.querySelector('input[name="residency"]:checked')?.value;
+            const remittance = document.querySelector('input[name="remittance"]:checked')?.value;
+            const borrowing = document.querySelector('input[name="borrowing"]:checked')?.value;
+            const trade = document.querySelector('input[name="trade"]:checked')?.value;
+            const deposit = document.querySelector('input[name="deposit"]:checked')?.value;
+            const cash = document.querySelector('input[name="cash"]:checked')?.value;
+
+            let needsReporting = false;
+            let reportingDetails = [];
+
+            // 해외송금 체크
+            if (remittance === 'over-50k') {
+                needsReporting = true;
+                reportingDetails.push('• 연간 US$ 5만 초과 해외송금 → 한국은행 또는 외국환은행 신고 필요');
+            }
+
+            // 외화차입 체크
+            if (borrowing === 'individual') {
+                needsReporting = true;
+                reportingDetails.push('• 개인/비영리법인 외화차입 → 한국은행 신고 필요');
+            } else if (borrowing === 'under-30m') {
+                needsReporting = true;
+                reportingDetails.push('• 영리법인 US$ 3천만 이하 외화차입 → 외국환은행 신고 필요');
+            } else if (borrowing === 'over-30m') {
+                needsReporting = true;
+                reportingDetails.push('• 영리법인 US$ 3천만 초과 외화차입 → 기획재정부 신고 필요');
+            }
+
+            // 수출입 체크
+            if (trade === 'advance-payment') {
+                needsReporting = true;
+                reportingDetails.push('• 계약 건당 US$ 10만 초과, 1년 초과 선지급/후수령 → 한국은행 신고 필요');
+            }
+
+            // 외화예금 체크
+            if (deposit === 'over-50k') {
+                needsReporting = true;
+                reportingDetails.push('• 건당 US$ 5만 초과 외화예금 → 한국은행 또는 외국환은행 신고 필요');
+            }
+
+            // 현금 휴대반출 체크
+            if (cash === 'over-10k') {
+                needsReporting = true;
+                reportingDetails.push('• US$ 1만 초과 현금 휴대반출 → 세관 신고 필요');
+            }
+
+            const resultDiv = document.getElementById('result');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultText = document.getElementById('resultText');
+
+            if (needsReporting) {
+                resultTitle.textContent = '⚠️ 신고 의무 있음';
+                resultText.innerHTML = `
+                    <strong>다음 항목에 대해 신고가 필요합니다:</strong><br><br>
+                    ${reportingDetails.join('<br>')}
+                    <br><br>
+                    <strong>⚡ 주의사항:</strong><br>
+                    • 신고 위반시 위반금액이 US$ 3만 이하: 과태료 처분<br>
+                    • 신고 위반시 위반금액이 US$ 3만 초과: 1년 이하 징역 또는 1억원 이하 벌금<br>
+                    • 정확한 신고 절차는 관련 기관(한국은행, 기획재정부, 외국환은행)에 문의하세요.
+                `;
+                resultDiv.style.background = 'linear-gradient(135deg, #fed7d7, #feb2b2)';
+                resultDiv.style.color = '#742a2a';
+            } else {
+                resultTitle.textContent = '✅ 신고 의무 없음';
+                resultText.innerHTML = `
+                    현재 답변하신 내용으로는 외환거래법상 신고 의무가 없는 것으로 판단됩니다.<br><br>
+                    <strong>📌 참고사항:</strong><br>
+                    • 향후 거래 규모나 조건이 변경될 경우 신고 의무가 발생할 수 있습니다.<br>
+                    • 복잡한 거래의 경우 전문가나 관련 기관에 사전 문의하시기 바랍니다.<br>
+                    • 이 결과는 참고용이며, 정확한 판단은 관련 기관의 상담을 받으시기 바랍니다.
+                `;
+                resultDiv.style.background = 'linear-gradient(135deg, #c6f6d5, #9ae6b4)';
+                resultDiv.style.color = '#2f855a';
+            }
+
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
